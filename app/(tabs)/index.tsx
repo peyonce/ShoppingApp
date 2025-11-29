@@ -1,31 +1,18 @@
-import React, { useEffect, useState } from 'react';
+ import React, { useEffect, useState } from 'react';
 import { Alert, Image, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { addItem, clearAllItems, deleteItem, editItem, loadShoppingListFromStorage, setItems, togglePurchased } from '../../store/slices/myShoppingSlice';
 
-const colors = {
-  background: '#F8FFF8',
-  card: 'white',
-  primary: '#4CAF50',
-  secondary: '#2196F3',
-  text: '#2E7D32',
-  lightText: '#666666',
-  warning: '#FF9800',
-  danger: '#F44336'
-};
+const colors = { background: '#F8FFF8', card: 'white', primary: '#4CAF50', text: '#2E7D32', lightText: '#666666' };
 
 const groceryItems = [
-  
   { name: 'Peaches', image: require('../../assets/images/fruits/peaches.jpg'), category: 'fruits', price: 'R50', unit: 'each' },
   { name: 'Oranges', image: require('../../assets/images/fruits/oranges.jpg'), category: 'fruits', price: 'R30', unit: 'each' },
   { name: 'Blueberry', image: require('../../assets/images/fruits/blueberry.jpg'), category: 'fruits', price: 'R200', unit: 'pack' },
-  
   { name: 'Bell Peppers', image: require('../../assets/images/vegetables/bell peppers.jpg'), category: 'vegetables', price: 'R80', unit: 'each' },
   { name: 'Onions', image: require('../../assets/images/vegetables/onions.jpg'), category: 'vegetables', price: 'R40', unit: 'each' },
-  
   { name: 'Eggs', image: require('../../assets/images/dairy/Egg.jpg'), category: 'dairy', price: 'R350', unit: 'dozen' },
   { name: 'Yogurt', image: require('../../assets/images/dairy/yogurt.jpg'), category: 'dairy', price: 'R120', unit: 'cup' },
-  
   { name: 'Tomato Sauce', image: require('../../assets/images/other/Tomato sauce.jpg'), category: 'other', price: 'R180', unit: 'jar' },
   { name: 'Bread', image: require('../../assets/images/other/bread.jpg'), category: 'other', price: 'R25', unit: 'loaf' },
 ];
@@ -36,7 +23,6 @@ export default function SimpleShoppingList() {
   const [itemName, setItemName] = useState('');
   const [quantity, setQuantity] = useState('1');
   const [unit, setUnit] = useState('item');
-  
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editName, setEditName] = useState('');
   const [editQuantity, setEditQuantity] = useState('');
@@ -55,70 +41,37 @@ export default function SimpleShoppingList() {
 
   const addNewItem = () => {
     if (itemName.trim() !== '') {
-      dispatch(addItem({ 
-        name: itemName, 
-        quantity: quantity,
-        unit: unit
-      }));
-      setItemName('');
-      setQuantity('1');
-      setUnit('item');
+      dispatch(addItem({ name: itemName, quantity: quantity, unit: unit }));
+      setItemName(''); setQuantity('1'); setUnit('item');
     }
   };
 
   const addCommonItem = (item: any) => {
-    dispatch(addItem({ 
-      name: item.name, 
-      quantity: '1',
-      unit: item.unit
-    }));
-  };
-
-  const deleteItemFromList = (id: string) => {
-    dispatch(deleteItem(id));
+    dispatch(addItem({ name: item.name, quantity: '1', unit: item.unit }));
   };
 
   const clearAll = () => {
     if (items.length > 0) {
-      Alert.alert(
-        'Clear List',
-        'Are you sure you want to clear your entire shopping list?',
-        [
-          { text: 'Cancel', style: 'cancel' },
-          { 
-            text: 'Clear All', 
-            style: 'destructive', 
-            onPress: () => dispatch(clearAllItems())
-          },
-        ]
-      );
+      Alert.alert('Clear List', 'Clear all items?', [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Clear All', onPress: () => dispatch(clearAllItems()) },
+      ]);
     }
   };
 
-   
   const clearPurchased = () => {
     const purchased = items.filter((item: any) => item.purchased);
     if (purchased.length > 0) {
-      Alert.alert(
-        'Clear Purchased',
-        `Remove ${purchased.length} purchased item${purchased.length !== 1 ? 's' : ''} from your list?`,
-        [
-          { text: 'Cancel', style: 'cancel' },
-          { 
-            text: 'Clear', 
-            style: 'destructive', 
-            onPress: () => {
-               
-              const unpurchasedItems = items.filter((item: any) => !item.purchased);
-              dispatch(setItems(unpurchasedItems));
-            }
-          },
-        ]
-      );
+      Alert.alert('Clear Purchased', `Remove ${purchased.length} purchased items?`, [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Clear', onPress: () => {
+          const unpurchasedItems = items.filter((item: any) => !item.purchased);
+          dispatch(setItems(unpurchasedItems));
+        }},
+      ]);
     }
   };
 
-   
   const startEditing = (item: any) => {
     setEditingId(item.id);
     setEditName(item.name);
@@ -128,510 +81,120 @@ export default function SimpleShoppingList() {
 
   const saveEdit = () => {
     if (editName.trim() !== '' && editingId) {
-      dispatch(editItem({ 
-        id: editingId, 
-        name: editName, 
-        quantity: editQuantity,
-        unit: editUnit
-      }));
+      dispatch(editItem({ id: editingId, name: editName, quantity: editQuantity, unit: editUnit }));
       cancelEdit();
     }
   };
 
   const cancelEdit = () => {
-    setEditingId(null);
-    setEditName('');
-    setEditQuantity('');
-    setEditUnit('');
+    setEditingId(null); setEditName(''); setEditQuantity(''); setEditUnit('');
   };
 
-   
   const findItemImage = (itemName: string) => {
-    const foundItem = groceryItems.find(item => 
-      item.name.toLowerCase() === itemName.toLowerCase()
-    );
-    if (foundItem) {
-      return foundItem.image;
-    }
-    return require('../../assets/images/other/bread.jpg');
+    const foundItem = groceryItems.find(item => item.name.toLowerCase() === itemName.toLowerCase());
+    return foundItem ? foundItem.image : require('../../assets/images/other/bread.jpg');
   };
+
+  const CategorySection = ({ title, category }: { title: string; category: string }) => (
+    <View>
+      <Text style={{ fontSize: 18, fontWeight: 'bold', color: colors.text, marginBottom: 10 }}>{title}</Text>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginBottom: 20 }}>
+        <View style={{ flexDirection: 'row' }}>
+          {groceryItems.filter(item => item.category === category).map((item, index) => (
+            <TouchableOpacity key={index} style={{ backgroundColor: colors.card, padding: 10, borderRadius: 10, alignItems: 'center', marginRight: 10, width: 100, borderWidth: 1, borderColor: '#E0E0E0' }} onPress={() => addCommonItem(item)}>
+              <Image source={item.image} style={{ width: 60, height: 60, borderRadius: 8, resizeMode: 'cover' }} />
+              <Text style={{ fontSize: 12, marginTop: 5, fontWeight: 'bold', textAlign: 'center' }}>{item.name}</Text>
+              <Text style={{ fontSize: 10, color: colors.primary, marginTop: 2 }}>{item.price}</Text>
+              <Text style={{ fontSize: 9, color: colors.lightText }}>{item.unit}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </ScrollView>
+    </View>
+  );
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
-      
       <View style={{ backgroundColor: colors.primary, padding: 20 }}>
-        <Text style={{ fontSize: 24, fontWeight: 'bold', color: 'white', textAlign: 'center' }}>
-           My Shopping List
-        </Text>
+        <Text style={{ fontSize: 24, fontWeight: 'bold', color: 'white', textAlign: 'center' }}>My Shopping List</Text>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 10 }}>
-          <Text style={{ color: 'white', fontSize: 14 }}>
-            Total: {items.length}
-          </Text>
-          <Text style={{ color: '#C8E6C9', fontSize: 14 }}>
-            Done: {purchasedItems}
-          </Text>
-          <Text style={{ color: '#FFECB3', fontSize: 14 }}>
-            Left: {remainingItems}
-          </Text>
+          <Text style={{ color: 'white', fontSize: 14 }}>Total: {items.length}</Text>
+          <Text style={{ color: '#C8E6C9', fontSize: 14 }}>Done: {purchasedItems}</Text>
+          <Text style={{ color: '#FFECB3', fontSize: 14 }}>Left: {remainingItems}</Text>
         </View>
       </View>
 
       <ScrollView style={{ flex: 1, padding: 15 }}>
-         
-        <Text style={{ fontSize: 20, fontWeight: 'bold', color: colors.text, marginBottom: 15, textAlign: 'center' }}>
-          Quick Add Items
-        </Text>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', color: colors.text, marginBottom: 15, textAlign: 'center' }}>Quick Add Items</Text>
 
-        <Text style={{ fontSize: 18, fontWeight: 'bold', color: colors.text, marginBottom: 10 }}>
-           Fruits
-        </Text>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginBottom: 20 }}>
-          <View style={{ flexDirection: 'row' }}>
-            {groceryItems
-              .filter(item => item.category === 'fruits')
-              .map((item, index) => (
-                <TouchableOpacity 
-                  key={index}
-                  style={{
-                    backgroundColor: colors.card,
-                    padding: 10,
-                    borderRadius: 10,
-                    alignItems: 'center',
-                    marginRight: 10,
-                    width: 100,
-                    borderWidth: 1,
-                    borderColor: '#E0E0E0'
-                  }}
-                  onPress={() => addCommonItem(item)}
-                >
-                  <Image 
-                    source={item.image}
-                    style={{ 
-                      width: 60, 
-                      height: 60, 
-                      borderRadius: 8,
-                      resizeMode: 'cover'
-                    }}
-                  />
-                  <Text style={{ fontSize: 12, marginTop: 5, fontWeight: 'bold', textAlign: 'center' }}>
-                    {item.name}
-                  </Text>
-                  <Text style={{ fontSize: 10, color: colors.primary, marginTop: 2 }}>
-                    {item.price}
-                  </Text>
-                  <Text style={{ fontSize: 9, color: colors.lightText }}>
-                    {item.unit}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-          </View>
-        </ScrollView>
+        <CategorySection title="Fruits" category="fruits" />
+        <CategorySection title="Vegetables" category="vegetables" />
+        <CategorySection title="Dairy & Eggs" category="dairy" />
+        <CategorySection title="Other Items" category="other" />
 
-        <Text style={{ fontSize: 18, fontWeight: 'bold', color: colors.text, marginBottom: 10 }}>
-          Vegetables
-        </Text>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginBottom: 20 }}>
-          <View style={{ flexDirection: 'row' }}>
-            {groceryItems
-              .filter(item => item.category === 'vegetables')
-              .map((item, index) => (
-                <TouchableOpacity 
-                  key={index}
-                  style={{
-                    backgroundColor: colors.card,
-                    padding: 10,
-                    borderRadius: 10,
-                    alignItems: 'center',
-                    marginRight: 10,
-                    width: 100,
-                    borderWidth: 1,
-                    borderColor: '#E0E0E0'
-                  }}
-                  onPress={() => addCommonItem(item)}
-                >
-                  <Image 
-                    source={item.image}
-                    style={{ 
-                      width: 60, 
-                      height: 60, 
-                      borderRadius: 8,
-                      resizeMode: 'cover'
-                    }}
-                  />
-                  <Text style={{ fontSize: 12, marginTop: 5, fontWeight: 'bold', textAlign: 'center' }}>
-                    {item.name}
-                  </Text>
-                  <Text style={{ fontSize: 10, color: colors.primary, marginTop: 2 }}>
-                    {item.price}
-                  </Text>
-                  <Text style={{ fontSize: 9, color: colors.lightText }}>
-                    {item.unit}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-          </View>
-        </ScrollView>
-
-        <Text style={{ fontSize: 18, fontWeight: 'bold', color: colors.text, marginBottom: 10 }}>
-           Dairy & Eggs
-        </Text>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginBottom: 20 }}>
-          <View style={{ flexDirection: 'row' }}>
-            {groceryItems
-              .filter(item => item.category === 'dairy')
-              .map((item, index) => (
-                <TouchableOpacity 
-                  key={index}
-                  style={{
-                    backgroundColor: colors.card,
-                    padding: 10,
-                    borderRadius: 10,
-                    alignItems: 'center',
-                    marginRight: 10,
-                    width: 100,
-                    borderWidth: 1,
-                    borderColor: '#E0E0E0'
-                  }}
-                  onPress={() => addCommonItem(item)}
-                >
-                  <Image 
-                    source={item.image}
-                    style={{ 
-                      width: 60, 
-                      height: 60, 
-                      borderRadius: 8,
-                      resizeMode: 'cover'
-                    }}
-                  />
-                  <Text style={{ fontSize: 12, marginTop: 5, fontWeight: 'bold', textAlign: 'center' }}>
-                    {item.name}
-                  </Text>
-                  <Text style={{ fontSize: 10, color: colors.primary, marginTop: 2 }}>
-                    {item.price}
-                  </Text>
-                  <Text style={{ fontSize: 9, color: colors.lightText }}>
-                    {item.unit}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-          </View>
-        </ScrollView>
-
-        <Text style={{ fontSize: 18, fontWeight: 'bold', color: colors.text, marginBottom: 10 }}>
-           Pantry Items
-        </Text>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginBottom: 20 }}>
-          <View style={{ flexDirection: 'row' }}>
-            {groceryItems
-              .filter(item => item.category === 'other')
-              .map((item, index) => (
-                <TouchableOpacity 
-                  key={index}
-                  style={{
-                    backgroundColor: colors.card,
-                    padding: 10,
-                    borderRadius: 10,
-                    alignItems: 'center',
-                    marginRight: 10,
-                    width: 100,
-                    borderWidth: 1,
-                    borderColor: '#E0E0E0'
-                  }}
-                  onPress={() => addCommonItem(item)}
-                >
-                  <Image 
-                    source={item.image}
-                    style={{ 
-                      width: 60, 
-                      height: 60, 
-                      borderRadius: 8,
-                      resizeMode: 'cover'
-                    }}
-                  />
-                  <Text style={{ fontSize: 12, marginTop: 5, fontWeight: 'bold', textAlign: 'center' }}>
-                    {item.name}
-                  </Text>
-                  <Text style={{ fontSize: 10, color: colors.primary, marginTop: 2 }}>
-                    {item.price}
-                  </Text>
-                  <Text style={{ fontSize: 9, color: colors.lightText }}>
-                    {item.unit}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-          </View>
-        </ScrollView>
-
-        <View style={{ 
-          backgroundColor: colors.card, 
-          padding: 15, 
-          borderRadius: 10, 
-          marginBottom: 20,
-          borderWidth: 1,
-          borderColor: '#E0E0E0'
-        }}>
+        <View style={{ backgroundColor: colors.card, padding: 15, borderRadius: 10, marginBottom: 20, borderWidth: 1, borderColor: '#E0E0E0' }}>
           <Text style={{ fontSize: 16, fontWeight: '600', marginBottom: 10 }}>Add Custom Item:</Text>
-          <TextInput
-            style={{ 
-              borderWidth: 1, 
-              borderColor: '#DDD',
-              padding: 12, 
-              marginBottom: 10, 
-              borderRadius: 8,
-              backgroundColor: '#F9F9F9'
-            }}
-            placeholder="Item name"
-            value={itemName}
-            onChangeText={setItemName}
-          />
+          <TextInput style={{ borderWidth: 1, borderColor: '#DDD', padding: 12, marginBottom: 10, borderRadius: 8, backgroundColor: '#F9F9F9' }} placeholder="Item name" value={itemName} onChangeText={setItemName} />
           <View style={{ flexDirection: 'row', marginBottom: 15 }}>
-            <TextInput
-              style={{ 
-                flex: 1,
-                borderWidth: 1, 
-                borderColor: '#DDD',
-                padding: 12, 
-                marginRight: 10, 
-                borderRadius: 8,
-                backgroundColor: '#F9F9F9'
-              }}
-              placeholder="Quantity"
-              value={quantity}
-              onChangeText={setQuantity}
-              keyboardType="numeric"
-            />
-            <TextInput
-              style={{ 
-                width: 100,
-                borderWidth: 1, 
-                borderColor: '#DDD',
-                padding: 12, 
-                borderRadius: 8,
-                backgroundColor: '#F9F9F9'
-              }}
-              placeholder="Unit"
-              value={unit}
-              onChangeText={setUnit}
-            />
+            <TextInput style={{ flex: 1, borderWidth: 1, borderColor: '#DDD', padding: 12, marginRight: 10, borderRadius: 8, backgroundColor: '#F9F9F9' }} placeholder="Quantity" value={quantity} onChangeText={setQuantity} keyboardType="numeric" />
+            <TextInput style={{ width: 100, borderWidth: 1, borderColor: '#DDD', padding: 12, borderRadius: 8, backgroundColor: '#F9F9F9' }} placeholder="Unit" value={unit} onChangeText={setUnit} />
           </View>
-          <TouchableOpacity 
-            style={{ 
-              backgroundColor: colors.primary, 
-              padding: 15, 
-              borderRadius: 8,
-              alignItems: 'center'
-            }}
-            onPress={addNewItem}
-          >
+          <TouchableOpacity style={{ backgroundColor: colors.primary, padding: 15, borderRadius: 8, alignItems: 'center' }} onPress={addNewItem}>
             <Text style={{ color: 'white', fontWeight: 'bold' }}>Add to List</Text>
           </TouchableOpacity>
         </View>
 
-         
         {items.length > 0 && (
           <View style={{ flexDirection: 'row', marginBottom: 20 }}>
-            <TouchableOpacity 
-              style={{ 
-                flex: 1,
-                backgroundColor: colors.warning, 
-                padding: 12, 
-                borderRadius: 8,
-                alignItems: 'center',
-                marginRight: 10
-              }}
-              onPress={clearPurchased}
-            >
+            <TouchableOpacity style={{ flex: 1, backgroundColor: '#FF9800', padding: 12, borderRadius: 8, alignItems: 'center', marginRight: 10 }} onPress={clearPurchased}>
               <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 12 }}>Clear Purchased</Text>
             </TouchableOpacity>
-            <TouchableOpacity 
-              style={{ 
-                flex: 1,
-                backgroundColor: colors.danger, 
-                padding: 12, 
-                borderRadius: 8,
-                alignItems: 'center'
-              }}
-              onPress={clearAll}
-            >
+            <TouchableOpacity style={{ flex: 1, backgroundColor: '#F44336', padding: 12, borderRadius: 8, alignItems: 'center' }} onPress={clearAll}>
               <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 12 }}>Clear All</Text>
             </TouchableOpacity>
           </View>
         )}
 
-         
         {items.length === 0 ? (
           <View style={{ alignItems: 'center', padding: 40 }}>
-            <Text style={{ fontSize: 18, color: colors.lightText, textAlign: 'center', marginBottom: 10 }}>
-              Your shopping list is empty
-            </Text>
-            <Text style={{ fontSize: 14, color: colors.lightText, textAlign: 'center' }}>
-              Add some items above to get started!
-            </Text>
+            <Text style={{ fontSize: 18, color: colors.lightText, textAlign: 'center', marginBottom: 10 }}>Your shopping list is empty</Text>
+            <Text style={{ fontSize: 14, color: colors.lightText, textAlign: 'center' }}>Add some items above to get started!</Text>
           </View>
         ) : (
           <View>
             <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 10 }}>Your Shopping List:</Text>
             {items.map((item: any) => (
-              <View 
-                key={item.id}
-                style={{ 
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  backgroundColor: item.purchased ? '#F0F8F0' : colors.card,
-                  padding: 12,
-                  marginBottom: 8,
-                  borderRadius: 8,
-                  borderWidth: 1,
-                  borderColor: item.purchased ? colors.primary : '#E0E0E0'
-                }}
-              >
+              <View key={item.id} style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: item.purchased ? '#F0F8F0' : colors.card, padding: 12, marginBottom: 8, borderRadius: 8, borderWidth: 1, borderColor: item.purchased ? colors.primary : '#E0E0E0' }}>
+                <Image source={findItemImage(item.name)} style={{ width: 45, height: 45, borderRadius: 6, marginRight: 12, resizeMode: 'cover' }} />
                 
-                <Image 
-                  source={findItemImage(item.name)}
-                  style={{ 
-                    width: 45, 
-                    height: 45, 
-                    borderRadius: 6, 
-                    marginRight: 12,
-                    resizeMode: 'cover'
-                  }}
-                />
-                
-                 
                 {editingId === item.id ? (
-                  
                   <View style={{ flex: 1 }}>
-                    <TextInput
-                      style={{ 
-                        borderWidth: 1,
-                        borderColor: colors.primary,
-                        padding: 8,
-                        borderRadius: 6,
-                        marginBottom: 5,
-                        backgroundColor: 'white'
-                      }}
-                      value={editName}
-                      onChangeText={setEditName}
-                    />
+                    <TextInput style={{ borderWidth: 1, borderColor: colors.primary, padding: 8, borderRadius: 6, marginBottom: 5, backgroundColor: 'white' }} value={editName} onChangeText={setEditName} />
                     <View style={{ flexDirection: 'row' }}>
-                      <TextInput
-                        style={{ 
-                          flex: 1,
-                          borderWidth: 1,
-                          borderColor: colors.primary,
-                          padding: 8,
-                          borderRadius: 6,
-                          marginRight: 8,
-                          backgroundColor: 'white'
-                        }}
-                        value={editQuantity}
-                        onChangeText={setEditQuantity}
-                        placeholder="Qty"
-                        keyboardType="numeric"
-                      />
-                      <TextInput
-                        style={{ 
-                          width: 80,
-                          borderWidth: 1,
-                          borderColor: colors.primary,
-                          padding: 8,
-                          borderRadius: 6,
-                          backgroundColor: 'white'
-                        }}
-                        value={editUnit}
-                        onChangeText={setEditUnit}
-                        placeholder="Unit"
-                      />
+                      <TextInput style={{ flex: 1, borderWidth: 1, borderColor: colors.primary, padding: 8, borderRadius: 6, marginRight: 8, backgroundColor: 'white' }} value={editQuantity} onChangeText={setEditQuantity} placeholder="Qty" keyboardType="numeric" />
+                      <TextInput style={{ width: 80, borderWidth: 1, borderColor: colors.primary, padding: 8, borderRadius: 6, backgroundColor: 'white' }} value={editUnit} onChangeText={setEditUnit} placeholder="Unit" />
                     </View>
                   </View>
                 ) : (
-                   
                   <View style={{ flex: 1 }}>
-                    <Text style={{ 
-                      fontSize: 16, 
-                      fontWeight: '600',
-                      textDecorationLine: item.purchased ? 'line-through' : 'none',
-                      color: item.purchased ? colors.lightText : colors.text
-                    }}>
-                      {item.name}
-                    </Text>
-                    <Text style={{ fontSize: 14, color: colors.lightText }}>
-                      {item.quantity} {item.unit || 'item'}
-                    </Text>
+                    <Text style={{ fontSize: 16, fontWeight: '600', textDecorationLine: item.purchased ? 'line-through' : 'none', color: item.purchased ? colors.lightText : colors.text }}>{item.name}</Text>
+                    <Text style={{ fontSize: 14, color: colors.lightText }}>{item.quantity} {item.unit || 'item'}</Text>
                   </View>
                 )}
 
-                 
                 <View style={{ flexDirection: 'row' }}>
                   {editingId === item.id ? (
-                     
                     <>
-                      <TouchableOpacity 
-                        onPress={saveEdit}
-                        style={{ 
-                          padding: 10, 
-                          marginRight: 8,
-                          backgroundColor: colors.primary,
-                          borderRadius: 6
-                        }}
-                      >
-                        <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 12 }}>Save</Text>
-                      </TouchableOpacity>
-                      
-                      <TouchableOpacity 
-                        onPress={cancelEdit}
-                        style={{ 
-                          padding: 10,
-                          backgroundColor: '#FFEBEE',
-                          borderRadius: 6
-                        }}
-                      >
-                        <Text style={{ color: '#F44336', fontWeight: 'bold', fontSize: 12 }}>Cancel</Text>
-                      </TouchableOpacity>
+                      <TouchableOpacity onPress={saveEdit} style={{ padding: 10, marginRight: 8, backgroundColor: colors.primary, borderRadius: 6 }}><Text style={{ color: 'white', fontWeight: 'bold', fontSize: 12 }}>Save</Text></TouchableOpacity>
+                      <TouchableOpacity onPress={cancelEdit} style={{ padding: 10, backgroundColor: '#FFEBEE', borderRadius: 6 }}><Text style={{ color: '#F44336', fontWeight: 'bold', fontSize: 12 }}>Cancel</Text></TouchableOpacity>
                     </>
                   ) : (
-                    
                     <>
-                      <TouchableOpacity 
-                        onPress={() => dispatch(togglePurchased(item.id))}
-                        style={{ 
-                          padding: 10, 
-                          marginRight: 8,
-                          backgroundColor: item.purchased ? colors.primary : '#F0F0F0',
-                          borderRadius: 6
-                        }}
-                      >
-                        <Text style={{ 
-                          color: item.purchased ? 'white' : colors.text, 
-                          fontWeight: 'bold',
-                          fontSize: 12
-                        }}>
-                          {item.purchased ? 'Done' : 'Mark'}
-                        </Text>
+                      <TouchableOpacity onPress={() => dispatch(togglePurchased(item.id))} style={{ padding: 10, marginRight: 8, backgroundColor: item.purchased ? colors.primary : '#F0F0F0', borderRadius: 6 }}>
+                        <Text style={{ color: item.purchased ? 'white' : colors.text, fontWeight: 'bold', fontSize: 12 }}>{item.purchased ? 'Done' : 'Mark'}</Text>
                       </TouchableOpacity>
-                      
-                      <TouchableOpacity 
-                        onPress={() => startEditing(item)}
-                        style={{ 
-                          padding: 10,
-                          marginRight: 8,
-                          backgroundColor: '#E3F2FD',
-                          borderRadius: 6
-                        }}
-                      >
-                        <Text style={{ color: '#2196F3', fontWeight: 'bold', fontSize: 12 }}>Edit</Text>
-                      </TouchableOpacity>
-                      
-                      <TouchableOpacity 
-                        onPress={() => deleteItemFromList(item.id)}
-                        style={{ 
-                          padding: 10,
-                          backgroundColor: '#FFEBEE',
-                          borderRadius: 6
-                        }}
-                      >
-                        <Text style={{ color: '#F44336', fontWeight: 'bold', fontSize: 12 }}>Delete</Text>
-                      </TouchableOpacity>
+                      <TouchableOpacity onPress={() => startEditing(item)} style={{ padding: 10, marginRight: 8, backgroundColor: '#E3F2FD', borderRadius: 6 }}><Text style={{ color: '#2196F3', fontWeight: 'bold', fontSize: 12 }}>Edit</Text></TouchableOpacity>
+                      <TouchableOpacity onPress={() => dispatch(deleteItem(item.id))} style={{ padding: 10, backgroundColor: '#FFEBEE', borderRadius: 6 }}><Text style={{ color: '#F44336', fontWeight: 'bold', fontSize: 12 }}>Delete</Text></TouchableOpacity>
                     </>
                   )}
                 </View>
