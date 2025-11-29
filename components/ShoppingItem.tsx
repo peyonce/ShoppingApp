@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ShoppingItem as ShoppingItemType } from '../store/slices/shoppingSlice';
 import { ThemedText } from './themed-text';
 import { ThemedView } from './themed-view';
-import { ShoppingItem as ShoppingItemType } from '../store/slices/shoppingSlice';
 
 interface Props {
   item: ShoppingItemType;
@@ -50,10 +50,10 @@ export const ShoppingItem: React.FC<Props> = ({ item, onEdit, onDelete, onToggle
             placeholder="Qty"
           />
           <TouchableOpacity onPress={handleSave} style={styles.saveButton}>
-            <Text style={styles.buttonText}>✓</Text>
+            <Text style={styles.buttonText}>Save</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={handleCancel} style={styles.cancelButton}>
-            <Text style={styles.buttonText}>✕</Text>
+            <Text style={styles.buttonText}>Cancel</Text>
           </TouchableOpacity>
         </View>
       ) : (

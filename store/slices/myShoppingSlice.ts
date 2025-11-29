@@ -5,6 +5,7 @@ export interface ShoppingItem {
   id: string;
   name: string;
   quantity: string;
+  unit: string;
   purchased: boolean;
 }
 
@@ -43,11 +44,12 @@ const myShoppingSlice = createSlice({
     setItems: (state, action: PayloadAction<ShoppingItem[]>) => {
       state.items = action.payload;
     },
-    addItem: (state, action: PayloadAction<{ name: string; quantity: string }>) => {
+    addItem: (state, action: PayloadAction<{ name: string; quantity: string; unit: string }>) => {
       const newItem: ShoppingItem = {
         id: Date.now().toString(),
         name: action.payload.name,
         quantity: action.payload.quantity,
+        unit: action.payload.unit,
         purchased: false,
       };
       state.items.push(newItem);
@@ -64,16 +66,21 @@ const myShoppingSlice = createSlice({
         saveShoppingListToStorage(state.items);
       }
     },
-    editItem: (state, action: PayloadAction<{ id: string; name: string; quantity: string }>) => {
+    editItem: (state, action: PayloadAction<{ id: string; name: string; quantity: string; unit: string }>) => {
       const item = state.items.find(item => item.id === action.payload.id);
       if (item) {
         item.name = action.payload.name;
         item.quantity = action.payload.quantity;
+        item.unit = action.payload.unit;
         saveShoppingListToStorage(state.items);
       }
+    },
+    clearAllItems: (state) => {
+      state.items = [];
+      saveShoppingListToStorage(state.items);
     },
   },
 });
 
-export const { setItems, addItem, deleteItem, togglePurchased, editItem } = myShoppingSlice.actions;
+export const { setItems, addItem, deleteItem, togglePurchased, editItem, clearAllItems } = myShoppingSlice.actions;
 export default myShoppingSlice.reducer;
