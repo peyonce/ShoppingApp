@@ -16,18 +16,18 @@ const colors = {
 
 const groceryItems = [
   
-  { name: 'Peaches', image: require('../../assets/images/fruits/peaches.jpg'), category: 'fruits', price: '₡500', unit: 'each' },
-  { name: 'Oranges', image: require('../../assets/images/fruits/oranges.jpg'), category: 'fruits', price: '₡300', unit: 'each' },
-  { name: 'Blueberry', image: require('../../assets/images/fruits/blueberry.jpg'), category: 'fruits', price: '₡2000', unit: 'pack' },
+  { name: 'Peaches', image: require('../../assets/images/fruits/peaches.jpg'), category: 'fruits', price: 'R50', unit: 'each' },
+  { name: 'Oranges', image: require('../../assets/images/fruits/oranges.jpg'), category: 'fruits', price: 'R30', unit: 'each' },
+  { name: 'Blueberry', image: require('../../assets/images/fruits/blueberry.jpg'), category: 'fruits', price: 'R200', unit: 'pack' },
   
-  { name: 'Bell Peppers', image: require('../../assets/images/vegetables/bell peppers.jpg'), category: 'vegetables', price: '₡800', unit: 'each' },
-  { name: 'Onions', image: require('../../assets/images/vegetables/onions.jpg'), category: 'vegetables', price: '₡400', unit: 'each' },
+  { name: 'Bell Peppers', image: require('../../assets/images/vegetables/bell peppers.jpg'), category: 'vegetables', price: 'R80', unit: 'each' },
+  { name: 'Onions', image: require('../../assets/images/vegetables/onions.jpg'), category: 'vegetables', price: 'R40', unit: 'each' },
   
-  { name: 'Eggs', image: require('../../assets/images/dairy/Egg.jpg'), category: 'dairy', price: '₡3500', unit: 'dozen' },
-  { name: 'Yogurt', image: require('../../assets/images/dairy/yogurt.jpg'), category: 'dairy', price: '₡1200', unit: 'cup' },
+  { name: 'Eggs', image: require('../../assets/images/dairy/Egg.jpg'), category: 'dairy', price: 'R350', unit: 'dozen' },
+  { name: 'Yogurt', image: require('../../assets/images/dairy/yogurt.jpg'), category: 'dairy', price: 'R120', unit: 'cup' },
   
-  { name: 'Tomato Sauce', image: require('../../assets/images/other/Tomato sauce.jpg'), category: 'other', price: '₡1800', unit: 'jar' },
-  { name: 'Bread', image: require('../../assets/images/other/bread.jpg'), category: 'other', price: '₡2500', unit: 'loaf' },
+  { name: 'Tomato Sauce', image: require('../../assets/images/other/Tomato sauce.jpg'), category: 'other', price: 'R180', unit: 'jar' },
+  { name: 'Bread', image: require('../../assets/images/other/bread.jpg'), category: 'other', price: 'R25', unit: 'loaf' },
 ];
 
 export default function SimpleShoppingList() {
