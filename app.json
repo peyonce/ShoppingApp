@@ -23,7 +23,33 @@
     },
     "web": {
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/favicon.png",
+      "pwa": {
+        "enabled": true,
+        "manifest": {
+          "name": "Shopping List App",
+          "short_name": "ShopList",
+          "description": "Your smart shopping list companion",
+          "theme_color": "#E6F4FE",
+          "background_color": "#ffffff",
+          "display": "standalone",
+          "orientation": "portrait",
+          "start_url": "/",
+          "icons": [
+            {
+              "src": "./assets/images/icon.png",
+              "sizes": "512x512",
+              "type": "image/png"
+            },
+            {
+              "src": "./assets/images/icon.png",
+              "sizes": "192x192",
+              "type": "image/png",
+              "purpose": "any maskable"
+            }
+          ]
+        }
+      }
     },
     "plugins": [
       "expo-router",
@@ -38,11 +64,30 @@
             "backgroundColor": "#000000"
           }
         }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "enableProguardInReleaseBuilds": true,
+            "enableShrinkResourcesInReleaseBuilds": true,
+            "enableMinifyInReleaseBuilds": true
+          },
+          "ios": {
+            "useFrameworks": "static"
+          }
+        }
       ]
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "398f6bd9-0d9a-4638-8f72-84d58255d4a1"
+      }
     }
   }
 }
